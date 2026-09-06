@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>달빛사주 · 기본 정보 입력</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { font-size: 17px; }
+  body{
+    margin:0; font-family:'Noto Sans KR', sans-serif; color:#F3EEDD;
+    background-color:#0F1626;
+  }
+  .app-shell{
+    max-width:480px; margin:0 auto; min-height:100vh;
+    background:linear-gradient(180deg, #0F1626 0%, #0F1626 260px, #1B2340 600px, #2A2038 1000px, #3B2E33 1450px, #4d3d34 1900px);
+    box-shadow:0 0 60px rgba(0,0,0,0.4);
+    padding-bottom:70px;
+  }
+  .font-serifkr{ font-family:'Noto Serif KR', serif; }
+
+  .hero{
+    position:relative; height:165px;
+    background-image:url('data:image/jpeg;base64,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');
+    background-size:cover; background-position:center 30%;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+    padding:0 24px 24px; text-align:center;
+  }
+  .hero::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(15,22,38,0) 0%, rgba(15,22,38,0.2) 60%, #0F1626 100%);
+    pointer-events:none;
+  }
+  .hero-content{ position:relative; z-index:2; }
+  .hero-eyebrow{
+    color:#D9B872; font-weight:700; font-size:0.75rem; letter-spacing:0.2em;
+    margin-bottom:8px; text-shadow:0 1px 8px rgba(0,0,0,0.7);
+  }
+  .hero h1{
+    font-size:1.3rem; font-weight:900; margin:0;
+    background:linear-gradient(180deg, #FBEFCF 0%, #D9B872 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 2px 16px rgba(217,184,114,0.25);
+  }
+
+  .step-indicator{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    margin:20px 0 4px; font-size:0.78rem; color:#A9A6C4; letter-spacing:0.04em;
+  }
+  .step-dot{ width:7px; height:7px; border-radius:50%; background:#D9B872; }
+  .step-dot.inactive{ background:rgba(217,184,114,0.25); }
+
+  form{ padding:24px 22px 0; }
+
+  .field{ margin-bottom:22px; }
+  .field-label{
+    display:block; font-family:'Noto Serif KR', serif; font-weight:700;
+    font-size:0.92rem; color:#F3D9A0; margin-bottom:9px; letter-spacing:0.02em;
+  }
+  .field-hint{ font-size:0.76rem; color:#8f97b8; margin-top:6px; line-height:1.6; }
+
+  input[type="text"], input[type="date"], input[type="time"], input[type="email"], textarea{
+    width:100%; background:rgba(27,35,64,0.55); backdrop-filter:blur(6px);
+    border:1px solid rgba(217,184,114,0.28); border-radius:12px;
+    padding:12px 14px; color:#F3EEDD; font-size:0.9rem; font-family:'Noto Sans KR', sans-serif;
+    outline:none; transition:border-color .15s;
+  }
+  input::placeholder, textarea::placeholder{ color:#6b7191; }
+  input:focus, textarea:focus{ border-color:#D9B872; }
+  textarea{ resize:vertical; min-height:70px; line-height:1.6; }
+
+  .toggle-row{ display:flex; gap:10px; }
+  .toggle-btn{
+    flex:1; text-align:center; padding:11px 0; border-radius:12px; cursor:pointer;
+    background:rgba(27,35,64,0.55); border:1px solid rgba(217,184,114,0.28);
+    color:#C9C4DD; font-size:0.88rem; font-weight:700; transition:all .15s;
+  }
+  .toggle-btn.active{
+    background:linear-gradient(180deg, #FBEFCF, #D9B872); color:#2A1D06;
+    border-color:#D9B872; box-shadow:0 0 12px rgba(217,184,114,0.4);
+  }
+
+  .time-row{ display:flex; gap:10px; align-items:stretch; }
+  .time-row input[type="time"]{ flex:1; }
+  .time-unknown-btn{
+    flex:none; padding:0 16px; border-radius:12px; cursor:pointer;
+    background:rgba(27,35,64,0.55); border:1px solid rgba(217,184,114,0.28);
+    color:#C9C4DD; font-size:0.85rem; font-weight:700; white-space:nowrap;
+  }
+  .time-unknown-btn.active{
+    background:linear-gradient(180deg, #FBEFCF, #D9B872); color:#2A1D06;
+    border-color:#D9B872; box-shadow:0 0 12px rgba(217,184,114,0.4);
+  }
+
+  .next-btn{
+    display:block; width:100%; margin-top:8px; font-weight:800; font-size:1rem; padding:16px 0;
+    border-radius:999px; text-decoration:none; letter-spacing:0.02em; text-align:center;
+    font-family:'Noto Serif KR', serif; color:#2A1D06; border:none; cursor:pointer;
+    background:linear-gradient(180deg, #FBEFCF, #D9B872);
+    box-shadow:0 0 24px rgba(217,184,114,0.45), 0 4px 12px rgba(0,0,0,0.35);
+  }
+  .next-btn:active{ transform:scale(0.99); }
+
+  .back-link{
+    display:block; text-align:center; margin-top:14px; color:#8f97b8;
+    font-size:0.82rem; text-decoration:none; font-family:'Noto Sans KR', sans-serif;
+  }
+
+  .error-text{ color:#FF9C82; font-size:0.78rem; margin-top:8px; display:none; }
+
+  /* 궁합분석 상대방 정보 (붉은 계열로 구분) */
+  .compat-section{
+    margin:26px 0 22px; padding:18px 16px; border-radius:16px;
+    background:rgba(166,52,42,0.08); border:1px solid rgba(255,157,130,0.35);
+  }
+  .compat-section-title{
+    font-family:'Noto Serif KR', serif; font-weight:900; font-size:1rem;
+    color:#FFB89E; margin:0 0 6px;
+  }
+  .compat-section-note{
+    font-size:0.78rem; color:#FF9C82; margin:0 0 16px; line-height:1.6;
+  }
+  .compat-section .field-label{ color:#FFB89E; }
+  .compat-section input[type="text"], .compat-section input[type="date"], .compat-section input[type="time"]{
+    border-color:rgba(255,157,130,0.35);
+  }
+  .compat-section input:focus{ border-color:#FF9C82; }
+  .compat-section .toggle-btn{ border-color:rgba(255,157,130,0.35); }
+  .compat-section .toggle-btn.active{
+    background:linear-gradient(180deg,#FFD9C7,#A6342A); color:#3a1208;
+    border-color:#A6342A; box-shadow:0 0 12px rgba(166,52,42,0.4);
+  }
+  .compat-section .time-unknown-btn{ border-color:rgba(255,157,130,0.35); }
+  .compat-section .time-unknown-btn.active{
+    background:linear-gradient(180deg,#FFD9C7,#A6342A); color:#3a1208;
+    border-color:#A6342A; box-shadow:0 0 12px rgba(166,52,42,0.4);
+  }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">달빛사주</div>
+      <h1 class="font-serifkr">정보를 입력해주세요</h1>
+    </div>
+  </div>
+
+  <div class="step-indicator">
+    <span class="step-dot"></span><span>기본정보</span>
+    <span style="opacity:0.4;">──</span>
+    <span class="step-dot inactive"></span><span style="opacity:0.6;">선택정보</span>
+  </div>
+
+  <form id="basicInfoForm">
+
+    <div class="field">
+      <label class="field-label">성함</label>
+      <input type="text" id="name" placeholder="이름을 입력해주세요" />
+    </div>
+
+    <div class="field">
+      <label class="field-label">성별</label>
+      <div class="toggle-row">
+        <div class="toggle-btn" data-group="gender" data-value="male">남성</div>
+        <div class="toggle-btn" data-group="gender" data-value="female">여성</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">생년월일</label>
+      <input type="date" id="birthDate" />
+    </div>
+
+    <div class="field">
+      <label class="field-label">양력 / 음력</label>
+      <div class="toggle-row">
+        <div class="toggle-btn" data-group="calType" data-value="solar">양력</div>
+        <div class="toggle-btn" data-group="calType" data-value="lunar">음력</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">출생국가</label>
+      <div class="toggle-row">
+        <div class="toggle-btn" data-group="country" data-value="kr">대한민국</div>
+        <div class="toggle-btn" data-group="country" data-value="etc">기타</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">출생시간</label>
+      <div class="time-row">
+        <input type="time" id="birthTime" />
+        <div class="time-unknown-btn" id="timeUnknownBtn">시간 모름</div>
+      </div>
+      <p class="field-hint">출생시간을 모르시면 '시간 모름' 버튼을 눌러주세요.<br/>시간을 몰라도 충분히 구체적인 분석이 가능합니다.</p>
+    </div>
+
+    <div class="field">
+      <label class="field-label">자유 질문 1</label>
+      <textarea id="question1" placeholder="가장 궁금하신 점을 편하게 적어주세요"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">자유 질문 2</label>
+      <textarea id="question2" placeholder="궁금하신 점을 하나 더 적어주세요"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">풀이집을 받아보실 이메일 주소</label>
+      <input type="email" id="email" placeholder="example@email.com" />
+    </div>
+
+    <div class="compat-section" id="compatSection" style="display:none;">
+      <div class="compat-section-title">궁합분석 상대방 정보</div>
+      <div class="compat-section-note">※ 궁합분석을 선택하신 경우에만 작성해주세요</div>
+
+      <div class="field">
+        <label class="field-label">상대방 성함</label>
+        <input type="text" id="partnerName" placeholder="상대방 이름을 입력해주세요" />
+      </div>
+
+      <div class="field">
+        <label class="field-label">상대방 성별</label>
+        <div class="toggle-row">
+          <div class="toggle-btn" data-group="partnerGender" data-value="male">남성</div>
+          <div class="toggle-btn" data-group="partnerGender" data-value="female">여성</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">상대방 생년월일</label>
+        <input type="date" id="partnerBirthDate" />
+      </div>
+
+      <div class="field">
+        <label class="field-label">상대방 양력 / 음력</label>
+        <div class="toggle-row">
+          <div class="toggle-btn" data-group="partnerCalType" data-value="solar">양력</div>
+          <div class="toggle-btn" data-group="partnerCalType" data-value="lunar">음력</div>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <label class="field-label">상대방 출생시간</label>
+        <div class="time-row">
+          <input type="time" id="partnerBirthTime" />
+          <div class="time-unknown-btn" id="partnerTimeUnknownBtn">시간 모름</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="error-text" id="formError">필수 항목을 확인해주세요.</p>
+
+    <button type="submit" class="next-btn">다음 단계</button>
+    <a href="report-contents.html" class="back-link">&#8592; 이전 페이지로 돌아가기</a>
+  </form>
+
+</div>
+
+<script>
+  document.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const group = btn.dataset.group;
+      document.querySelectorAll(`.toggle-btn[data-group="${group}"]`).forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  const timeUnknownBtn = document.getElementById('timeUnknownBtn');
+  const birthTimeInput = document.getElementById('birthTime');
+  timeUnknownBtn.addEventListener('click', () => {
+    const nowActive = timeUnknownBtn.classList.toggle('active');
+    birthTimeInput.disabled = nowActive;
+    birthTimeInput.value = nowActive ? '' : birthTimeInput.value;
+    birthTimeInput.style.opacity = nowActive ? '0.4' : '1';
+  });
+
+  const partnerTimeUnknownBtn = document.getElementById('partnerTimeUnknownBtn');
+  const partnerBirthTimeInput = document.getElementById('partnerBirthTime');
+  partnerTimeUnknownBtn.addEventListener('click', () => {
+    const nowActive = partnerTimeUnknownBtn.classList.toggle('active');
+    partnerBirthTimeInput.disabled = nowActive;
+    partnerBirthTimeInput.value = nowActive ? '' : partnerBirthTimeInput.value;
+    partnerBirthTimeInput.style.opacity = nowActive ? '0.4' : '1';
+  });
+
+  // 궁합분석을 선택한 경우에만 상대방 정보 섹션을 보여줌
+  const compatSelected = localStorage.getItem('dalbitAddonCompat') === '1';
+  document.getElementById('compatSection').style.display = compatSelected ? 'block' : 'none';
+
+  document.getElementById('basicInfoForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const birthDate = document.getElementById('birthDate').value;
+    const genderSelected = document.querySelector('.toggle-btn[data-group="gender"].active');
+    const calTypeSelected = document.querySelector('.toggle-btn[data-group="calType"].active');
+    const countrySelected = document.querySelector('.toggle-btn[data-group="country"].active');
+    const errorBox = document.getElementById('formError');
+
+    if (!name || !birthDate || !genderSelected || !calTypeSelected || !countrySelected) {
+      errorBox.style.display = 'block';
+      return;
+    }
+    errorBox.style.display = 'none';
+
+    const basicInfo = {
+      name: name,
+      birthDate: birthDate,
+      gender: genderSelected.textContent.trim(),
+      calType: calTypeSelected.textContent.trim(),
+      country: countrySelected.textContent.trim(),
+      birthTime: birthTimeInput.value || (timeUnknownBtn.classList.contains('active') ? '시간 모름' : ''),
+      question1: document.getElementById('question1').value.trim(),
+      question2: document.getElementById('question2').value.trim(),
+      email: document.getElementById('email').value.trim(),
+    };
+
+    if (compatSelected) {
+      const partnerGenderSelected = document.querySelector('.toggle-btn[data-group="partnerGender"].active');
+      const partnerCalTypeSelected = document.querySelector('.toggle-btn[data-group="partnerCalType"].active');
+      basicInfo.partnerName = document.getElementById('partnerName').value.trim();
+      basicInfo.partnerGender = partnerGenderSelected ? partnerGenderSelected.textContent.trim() : '';
+      basicInfo.partnerBirthDate = document.getElementById('partnerBirthDate').value;
+      basicInfo.partnerCalType = partnerCalTypeSelected ? partnerCalTypeSelected.textContent.trim() : '';
+      basicInfo.partnerBirthTime = partnerBirthTimeInput.value || (partnerTimeUnknownBtn.classList.contains('active') ? '시간 모름' : '');
+    }
+
+    localStorage.setItem('dalbitBasicInfo', JSON.stringify(basicInfo));
+
+    location.href = '선택정보.html';
+  });
+</script>
+</body>
+</html>
