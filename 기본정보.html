@@ -333,6 +333,10 @@
       basicInfo.partnerBirthTime = partnerBirthTimeInput.value || (partnerTimeUnknownBtn.classList.contains('active') ? '시간 모름' : '');
     }
 
+    // 주문번호 생성 (신청서 이메일과 입금 알림 이메일을 서로 매칭하기 위한 용도)
+    const orderId = 'DS-' + Date.now().toString(36).toUpperCase().slice(-4) + Math.random().toString(36).toUpperCase().slice(2, 5);
+    basicInfo.orderId = orderId;
+
     localStorage.setItem('dalbitBasicInfo', JSON.stringify(basicInfo));
 
     location.href = '선택정보.html';

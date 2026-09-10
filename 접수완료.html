@@ -176,6 +176,30 @@
     background:transparent; color:#A9A6C4; font-weight:600; font-size:0.86rem;
     border:1px solid rgba(255,255,255,0.15); margin-top:10px; cursor:pointer;
   }
+
+  .depositor-input{
+    display:block; width:100%; padding:12px 14px; margin-bottom:12px; box-sizing:border-box;
+    border-radius:10px; border:1px solid rgba(217,184,114,0.3);
+    background:rgba(15,22,38,0.5); color:#F3EEDD; font-size:0.9rem; font-family:inherit;
+  }
+  .depositor-input::placeholder{ color:#6b7191; }
+  .notify-status{ text-align:center; font-size:0.78rem; color:#8f97b8; margin-top:10px; min-height:18px; }
+  .notify-status.err{ color:#ff8a80; }
+
+  .delay-notice{
+    margin-top:16px; padding:16px 18px; border-radius:14px;
+    background:rgba(255,255,255,0.03); border:1px dashed rgba(217,184,114,0.25);
+  }
+  .delay-notice p{
+    font-size:0.78rem; line-height:1.75; color:#8f97b8; text-align:center; margin:0 0 12px;
+  }
+  .delay-notice p strong{ color:#C9C4DD; }
+  .delay-kakao-btn{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    width:100%; padding:11px 0; border-radius:10px; text-decoration:none;
+    background:rgba(254,229,0,0.12); color:#F3E9A8; font-weight:700; font-size:0.82rem;
+    border:1px solid rgba(254,229,0,0.25);
+  }
 </style>
 </head>
 <body>
@@ -237,9 +261,9 @@
       </div>
 
       <div class="bank-box">
-        <div class="bank-name">[은행명]</div>
-        <div class="account" id="accountNumber">[계좌번호]</div>
-        <div class="holder">예금주: [예금주명]</div>
+        <div class="bank-name">하나은행</div>
+        <div class="account" id="accountNumber">337-910017-76204</div>
+        <div class="holder">예금주: 이○리</div>
         <button type="button" class="copy-btn" id="copyBtn">계좌번호 복사하기</button>
       </div>
 
@@ -252,15 +276,45 @@
       <h2>입금 알리기</h2>
     </div>
     <div class="card">
-      <p class="kakao-desc">
-        송금 완료 후, 카톡으로 입금자명을 알려주시면<br/>
-        카카오톡으로 결과 전달 및 추가 상담이 가능합니다.
-      </p>
-      <a href="https://pf.kakao.com/_여기에_실제채널ID" target="_blank" class="kakao-btn">
-        💬 카카오톡 채널로 알리기
-      </a>
+
+      <div id="notifyForm">
+        <p class="kakao-desc">
+          송금하신 분의 성함을 입력하고 아래 버튼을 눌러주세요.<br/>
+          입금 확인 후 순서대로 정성껏 풀이해드릴게요.
+        </p>
+        <input type="text" id="depositorName" placeholder="입금하신 분 성함" class="depositor-input" />
+        <button type="button" class="kakao-btn" id="notifyBtn" style="background:linear-gradient(180deg,#FBEFCF,#D9B872); color:#2A1D06;">
+          입금 완료 알리기
+        </button>
+        <div id="notifyStatus" class="notify-status"></div>
+      </div>
+
+      <div id="notifyDone" style="display:none; text-align:center;">
+        <div style="font-size:2rem; margin-bottom:10px;">✨</div>
+        <div style="font-family:'Noto Serif KR',serif; font-size:1.1rem; font-weight:700; color:#F3D9A0; margin-bottom:14px;">
+          접수가 완료되었습니다
+        </div>
+        <p style="font-size:0.9rem; line-height:1.85; color:#E8E2F0;">
+          <span id="doneName">고객</span>님의 삶의 흐름을 이제부터 깊이 들여다보겠습니다.<br/>
+          한 글자 한 글자, 정성을 다해 풀어내겠습니다.
+        </p>
+        <p style="font-size:0.78rem; color:#8f97b8; margin-top:16px;">
+          완성된 풀이는 입력해주신 이메일로 전달드릴게요.
+        </p>
+      </div>
+
       <a href="선택정보.html" class="back-btn">
         &#8592; 이전 단계로 돌아가기
+      </a>
+    </div>
+
+    <div class="delay-notice">
+      <p>
+        입금 후 <strong>3일이 지나도</strong> 풀이집을 받지 못하셨다면,<br/>
+        아래 채널로 연락주세요. 빠르게 확인 후 안내드릴게요.
+      </p>
+      <a href="https://pf.kakao.com/_fRvSX" target="_blank" class="delay-kakao-btn">
+        💬 카카오톡 채널로 문의하기
       </a>
     </div>
   </div>
@@ -309,6 +363,61 @@
   });
 
   updatePrice();
+
+  // ===== 입금 알리기 =====
+  const WEB3FORMS_ACCESS_KEY = '27c296b8-e961-4361-a752-ae1316ab81ca';
+  let basicInfo = {};
+  try {
+    basicInfo = JSON.parse(localStorage.getItem('dalbitBasicInfo') || '{}');
+  } catch (e) {}
+
+  // 상단 이름 표시
+  const nameEl = document.getElementById('applicantName2');
+  if (nameEl && basicInfo.name) nameEl.textContent = basicInfo.name;
+
+  const depositorInput = document.getElementById('depositorName');
+  if (basicInfo.name && !depositorInput.value) depositorInput.value = basicInfo.name;
+
+  const notifyBtn = document.getElementById('notifyBtn');
+  const notifyStatus = document.getElementById('notifyStatus');
+
+  notifyBtn.addEventListener('click', async () => {
+    const depositor = depositorInput.value.trim();
+    if (!depositor) {
+      notifyStatus.className = 'notify-status err';
+      notifyStatus.textContent = '입금하신 분의 성함을 입력해주세요.';
+      return;
+    }
+
+    notifyBtn.disabled = true;
+    notifyStatus.className = 'notify-status';
+    notifyStatus.textContent = '전송 중이에요...';
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: `[${basicInfo.orderId || '번호없음'}] 달빛사주 입금 알림 - ${depositor}`,
+          '주문번호': basicInfo.orderId || '(정보 없음)',
+          '입금자명': depositor,
+          '신청자 이름': basicInfo.name || '(정보 없음)',
+          '이메일': basicInfo.email || '(정보 없음)',
+        }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || '전송 실패');
+
+      document.getElementById('doneName').textContent = basicInfo.name || depositor;
+      document.getElementById('notifyForm').style.display = 'none';
+      document.getElementById('notifyDone').style.display = 'block';
+    } catch (err) {
+      notifyStatus.className = 'notify-status err';
+      notifyStatus.textContent = '전송에 실패했어요. 잠시 후 다시 시도해주세요.';
+      notifyBtn.disabled = false;
+    }
+  });
 </script>
 </body>
 </html>

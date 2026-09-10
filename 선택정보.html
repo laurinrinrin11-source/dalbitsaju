@@ -210,8 +210,9 @@
 
     const payload = {
       access_key: WEB3FORMS_ACCESS_KEY,
-      subject: `달빛사주 신청 - ${basicInfo.name || '이름없음'}님`,
+      subject: `[${basicInfo.orderId || '번호없음'}] 달빛사주 신청 - ${basicInfo.name || '이름없음'}님`,
       from_name: '달빛사주 웹사이트',
+      '주문번호': basicInfo.orderId || '',
       '이름': basicInfo.name || '',
       '생년월일': basicInfo.birthDate || '',
       '성별': basicInfo.gender || '',

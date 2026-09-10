@@ -240,8 +240,8 @@
     <div class="chapter">
       <div class="chapter-marker">9</div>
       <div class="chapter-card">
-        <h3>2026년 월별 정밀 운세</h3>
-        <p>열두 달의 흐름을 짚어보는 기회의 달과 자중해야 할 타이밍</p>
+        <h3 id="wolbyeolTitle">앞으로 12개월 정밀 운세</h3>
+        <p id="wolbyeolDesc">열두 달의 흐름을 짚어보는 기회의 달과 자중해야 할 타이밍</p>
       </div>
     </div>
 
@@ -263,9 +263,7 @@
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
           <h3 style="margin:0;">궁합 분석 <span class="addon-price">(+10,000원)</span></h3>
           <a href="#" id="compatSelectBtn"
-            style="flex:none;background:linear-gradient(180deg,#FFD9C7,#A6342A);color:#3a1208;
-                   font-weight:800;font-size:0.78rem;padding:8px 16px;border-radius:999px;
-                   text-decoration:none;white-space:nowrap;box-shadow:0 0 10px rgba(166,52,42,0.4);">
+            style="flex:none;background:linear-gradient(180deg,#FFD9C7,#A6342A);color:#3a1208; font-weight:800;font-size:0.78rem;padding:8px 16px;border-radius:999px; text-decoration:none;white-space:nowrap;box-shadow:0 0 10px rgba(166,52,42,0.4);">
             선택하기
           </a>
         </div>
@@ -283,6 +281,16 @@
 
 </div>
 <script>
+  // 제9장 제목: 실제 리포트 생성 로직과 동일하게, 오늘 기준 "앞으로 12개월"을 자동 계산해서 표시
+  (function () {
+    const now = new Date();
+    const startLabel = `${now.getFullYear()}년 ${now.getMonth() + 1}월`;
+    const endDate = new Date(now.getFullYear(), now.getMonth() + 11, 1);
+    const endLabel = `${endDate.getFullYear()}년 ${endDate.getMonth() + 1}월`;
+    const titleEl = document.getElementById('wolbyeolTitle');
+    if (titleEl) titleEl.textContent = `${startLabel} ~ ${endLabel} 월별 정밀 운세`;
+  })();
+
   const compatBtn = document.getElementById('compatSelectBtn');
   // 이 페이지를 새로 열 때마다 항상 '선택 안 함' 상태로 초기화 (이전 방문자의 선택이 남지 않도록)
   let compatSelected = false;
