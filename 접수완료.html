@@ -226,11 +226,11 @@
       <div class="progress-circle">✓</div>
       <div class="progress-label">정보<br/>접수</div>
     </div>
-    <div class="progress-step current">
+    <div class="progress-step current" id="progressStep3">
       <div class="progress-circle">3</div>
       <div class="progress-label">복비<br/>이체</div>
     </div>
-    <div class="progress-step">
+    <div class="progress-step" id="progressStep4">
       <div class="progress-circle">4</div>
       <div class="progress-label">결과지<br/>전달</div>
     </div>
@@ -412,6 +412,18 @@
       document.getElementById('doneName').textContent = basicInfo.name || depositor;
       document.getElementById('notifyForm').style.display = 'none';
       document.getElementById('notifyDone').style.display = 'block';
+
+      // 진행 단계 표시 업데이트: 3단계 완료 처리, 4단계를 진행중으로
+      const step3 = document.getElementById('progressStep3');
+      const step4 = document.getElementById('progressStep4');
+      if (step3) {
+        step3.classList.remove('current');
+        step3.classList.add('done');
+        step3.querySelector('.progress-circle').textContent = '✓';
+      }
+      if (step4) {
+        step4.classList.add('current');
+      }
     } catch (err) {
       notifyStatus.className = 'notify-status err';
       notifyStatus.textContent = '전송에 실패했어요. 잠시 후 다시 시도해주세요.';
