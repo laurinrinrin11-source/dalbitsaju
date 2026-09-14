@@ -212,7 +212,6 @@
       access_key: WEB3FORMS_ACCESS_KEY,
       subject: `[${basicInfo.orderId || '번호없음'}] 달빛사주 신청 - ${basicInfo.name || '이름없음'}님`,
       from_name: '달빛사주 웹사이트',
-      '주문번호': basicInfo.orderId || '',
       '이름': basicInfo.name || '',
       '생년월일': basicInfo.birthDate || '',
       '성별': basicInfo.gender || '',
@@ -238,14 +237,22 @@
     }
 
     try {
-      await fetch('https://api.web3forms.com/submit', {
+      const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify(payload),
       });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || `서버 응답 오류 (${res.status})`);
+      }
     } catch (err) {
-      // 전송 실패해도 고객 흐름은 막지 않음
       console.error('신청 정보 전송 실패:', err);
+      submitBtn.disabled = false;
+      skipBtn.disabled = false;
+      submitBtn.textContent = originalText;
+      alert('신청 정보 전송에 실패했어요. 인터넷 연결을 확인하시고 다시 한 번 "제출하기"를 눌러주세요.\n\n계속 실패하면 카카오톡 채널로 문의해주세요.');
+      return; // 실패하면 여기서 멈추고, 절대 다음 페이지로 넘어가지 않음
     }
 
     location.href = '접수완료.html';

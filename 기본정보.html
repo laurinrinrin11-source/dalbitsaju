@@ -74,20 +74,6 @@
   input:focus, textarea:focus{ border-color:#D9B872; }
   textarea{ resize:vertical; min-height:70px; line-height:1.6; }
 
-  .birth-select-row{ display:flex; gap:8px; }
-  select.birth-select{
-    background:rgba(27,35,64,0.55); backdrop-filter:blur(6px);
-    border:1px solid rgba(217,184,114,0.28); border-radius:12px;
-    padding:12px 8px; color:#F3EEDD; font-size:0.9rem; font-family:'Noto Sans KR', sans-serif;
-    outline:none; transition:border-color .15s; -webkit-appearance:none; appearance:none;
-    text-align:center; text-align-last:center;
-  }
-  select.birth-select:focus{ border-color:#D9B872; }
-  select.birth-select.year{ flex:1.3; }
-  select.birth-select.month{ flex:1; }
-  select.birth-select.day{ flex:1; }
-  select.birth-select option{ background:#1B2340; color:#F3EEDD; }
-
   .toggle-row{ display:flex; gap:10px; }
   .toggle-btn{
     flex:1; text-align:center; padding:11px 0; border-radius:12px; cursor:pointer;
@@ -189,11 +175,7 @@
 
     <div class="field">
       <label class="field-label">생년월일</label>
-      <div class="birth-select-row">
-        <select id="birthYear" class="birth-select year"></select>
-        <select id="birthMonth" class="birth-select month"></select>
-        <select id="birthDay" class="birth-select day"></select>
-      </div>
+      <input type="date" id="birthDate" />
     </div>
 
     <div class="field">
@@ -255,11 +237,7 @@
 
       <div class="field">
         <label class="field-label">상대방 생년월일</label>
-        <div class="birth-select-row">
-          <select id="partnerBirthYear" class="birth-select year"></select>
-          <select id="partnerBirthMonth" class="birth-select month"></select>
-          <select id="partnerBirthDay" class="birth-select day"></select>
-        </div>
+        <input type="date" id="partnerBirthDate" />
       </div>
 
       <div class="field">
@@ -288,48 +266,6 @@
 </div>
 
 <script>
-  // ===== 생년월일 년/월/일 드롭다운 채우기 =====
-  function fillBirthSelects(yearId, monthId, dayId) {
-    const yearSel = document.getElementById(yearId);
-    const monthSel = document.getElementById(monthId);
-    const daySel = document.getElementById(dayId);
-    if (!yearSel || !monthSel || !daySel) return;
-
-    const thisYear = new Date().getFullYear();
-    yearSel.innerHTML = '<option value="">년도</option>' +
-      Array.from({length: thisYear - 1920 + 1}, (_, i) => thisYear - i)
-        .map(y => `<option value="${y}">${y}년</option>`).join('');
-
-    monthSel.innerHTML = '<option value="">월</option>' +
-      Array.from({length: 12}, (_, i) => i + 1)
-        .map(m => `<option value="${m}">${m}월</option>`).join('');
-
-    function refreshDays() {
-      const y = parseInt(yearSel.value) || thisYear;
-      const m = parseInt(monthSel.value) || 1;
-      const lastDay = new Date(y, m, 0).getDate();
-      const prevVal = daySel.value;
-      daySel.innerHTML = '<option value="">일</option>' +
-        Array.from({length: lastDay}, (_, i) => i + 1)
-          .map(d => `<option value="${d}">${d}일</option>`).join('');
-      if (prevVal && parseInt(prevVal) <= lastDay) daySel.value = prevVal;
-    }
-    refreshDays();
-    yearSel.addEventListener('change', refreshDays);
-    monthSel.addEventListener('change', refreshDays);
-  }
-
-  fillBirthSelects('birthYear', 'birthMonth', 'birthDay');
-  fillBirthSelects('partnerBirthYear', 'partnerBirthMonth', 'partnerBirthDay');
-
-  function getBirthDateValue(yearId, monthId, dayId) {
-    const y = document.getElementById(yearId).value;
-    const m = document.getElementById(monthId).value;
-    const d = document.getElementById(dayId).value;
-    if (!y || !m || !d) return '';
-    return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-  }
-
   document.querySelectorAll('.toggle-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const group = btn.dataset.group;
@@ -363,7 +299,7 @@
   document.getElementById('basicInfoForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const name = document.getElementById('name').value.trim();
-    const birthDate = getBirthDateValue('birthYear', 'birthMonth', 'birthDay');
+    const birthDate = document.getElementById('birthDate').value;
     const genderSelected = document.querySelector('.toggle-btn[data-group="gender"].active');
     const calTypeSelected = document.querySelector('.toggle-btn[data-group="calType"].active');
     const countrySelected = document.querySelector('.toggle-btn[data-group="country"].active');
@@ -392,7 +328,7 @@
       const partnerCalTypeSelected = document.querySelector('.toggle-btn[data-group="partnerCalType"].active');
       basicInfo.partnerName = document.getElementById('partnerName').value.trim();
       basicInfo.partnerGender = partnerGenderSelected ? partnerGenderSelected.textContent.trim() : '';
-      basicInfo.partnerBirthDate = getBirthDateValue('partnerBirthYear', 'partnerBirthMonth', 'partnerBirthDay');
+      basicInfo.partnerBirthDate = document.getElementById('partnerBirthDate').value;
       basicInfo.partnerCalType = partnerCalTypeSelected ? partnerCalTypeSelected.textContent.trim() : '';
       basicInfo.partnerBirthTime = partnerBirthTimeInput.value || (partnerTimeUnknownBtn.classList.contains('active') ? '시간 모름' : '');
     }
